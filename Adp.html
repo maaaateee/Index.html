@@ -84,6 +84,7 @@
         .btn:hover { background: #fff; border-color: var(--blue); color: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(37, 99, 235, 0.15); animation: none; }
         .btn.active { background: linear-gradient(135deg, var(--blue), var(--indigo)); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); transform: scale(1.05); animation: none; z-index: 10; }
         
+        /* Style spécial pour le bouton Direction */
         .btn-purple:hover { border-color: var(--purple); color: var(--purple); box-shadow: 0 6px 12px rgba(147, 51, 234, 0.15); }
         .btn-purple.active { background: linear-gradient(135deg, var(--purple), #7e22ce); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4); }
 
@@ -139,14 +140,17 @@
             </div>
         </div>
         <div class="flex gap-2 flex-wrap justify-end">
-            <button class="btn active" id="btn-actuel" onclick="switchTab('actuel')">ACTUEL (39)</button>
+            <button class="btn active" id="btn-actuel" onclick="switchTab('actuel')">GRILLE 39 (2022)</button>
+            
+            <!-- Groupe Projet/Direction -->
             <div class="flex flex-col gap-1">
-                <button class="btn" id="btn-projet" onclick="switchTab('projet')">PROJET (44)</button>
-                <button class="btn btn-purple" id="btn-direction" onclick="switchTab('direction')" style="font-size:0.7rem; padding:0.4rem 0.8rem; border-color:var(--purple); color:var(--purple);">GRILLE 44 DIRECTION</button>
+                <button class="btn" id="btn-projet" onclick="switchTab('projet')">GRILLE 44 amélioré</button>
+                <button class="btn btn-purple" id="btn-direction" onclick="switchTab('direction')" style="font-size:0.7rem; padding:0.4rem 0.8rem; border-color:var(--purple); color:var(--purple);">GRILLE 44 (direction)</button>
             </div>
+
             <div class="flex flex-col gap-1">
-                <button class="btn" id="btn-cible" onclick="switchTab('cible')">CIBLE (47)</button>
-                <button class="btn" id="btn-vierge" onclick="switchTab('vierge')" style="padding:0.3rem 0.8rem; font-size:0.75rem; border-style:dashed;">VIERGE</button>
+                <button class="btn" id="btn-cible" onclick="switchTab('cible')">GRILLE 47</button>
+                <button class="btn" id="btn-vierge" onclick="switchTab('vierge')" style="padding:0.3rem 0.8rem; font-size:0.75rem; border-style:dashed;">GRILLE 47 VIERGE</button>
             </div>
             <button class="btn" id="btn-compare" onclick="switchTab('compare')">COMPARATEUR</button>
             <button class="btn" onclick="document.documentElement.classList.toggle('dark')" style="border-radius:50%; padding:0.6rem; animation:none;">🌗</button>
@@ -332,7 +336,7 @@
         ["J2E","JFP","RH","RH","RH","N2E","NS3"],
         ["RH","RH","RH","J60H","JS4","J60H","RH"],
         ["RH","JS3","J60H","N2E","RH","RH","RH"],
-        ["J2E","N2E","NS4","RH","RH","RH","RH"], 
+        ["J2E","N2E","NS4","RH","RH","RH","RH"], /* L25 Corrected to N2E */
         ["RH","RH","RH","JS4","J60H","NS4","RH"],
         ["RH","RH","J60H","JR1","RH","RH","J60H"],
         ["J60H","J60H","RH","RH","RH","J2E","NS4"],
