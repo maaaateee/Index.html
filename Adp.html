@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulateur Grilles 2E - Version ADP</title>
     <style>
-        /* --- CSS NATIVE (ZERO DEPENDANCE - STYLE "BOOSTÉ") --- */
+        /* --- CSS NATIVE (ZERO DEPENDANCE) --- */
         :root {
-            /* Couleurs Base */
             --bg-body: #f8fafc; --bg-card: #ffffff;
             --text-main: #1e293b; --text-muted: #64748b;
             --border: #e2e8f0; --nav-bg: rgba(255, 255, 255, 0.95);
@@ -21,9 +20,9 @@
             --red: #ef4444; --red-light: #fef2f2; --red-text: #991b1b;
             --teal: #14b8a6; --teal-light: #f0fdfa; --teal-text: #115e59;
 
-            /* Codes Grille 2E (Identiques à l'original) */
-            --c-nuit: #1e3a8a; --t-nuit: white; /* N2E, NS3, NS4 */
-            --c-jour: #fef9c3; --t-jour: #854d0e; /* J60H, J2E, JS3, JS4 */
+            /* Codes Grille 2E */
+            --c-nuit: #1e3a8a; --t-nuit: white;
+            --c-jour: #fef9c3; --t-jour: #854d0e;
             --c-jfp: #fff1f2; --t-jfp: #9f1239;
             --c-jr1: #ecfccb; --t-jr1: #3f6212;
             --c-jmc: #ffedd5; --t-jmc: #9a3412;
@@ -58,7 +57,7 @@
         .card:hover { transform: translateY(-2px); transition: transform 0.2s; }
         .stat-icon-bg { position: absolute; top: 1rem; right: 1rem; opacity: 0.1; transform: scale(2); }
 
-        /* --- BOUTONS NAVIGATION (DESIGN BOOSTÉ - Identique site 1) --- */
+        /* --- BOUTONS --- */
         @keyframes pulse-border {
             0% { border-color: var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
             50% { border-color: var(--blue); box-shadow: 0 0 12px rgba(37, 99, 235, 0.25); }
@@ -75,6 +74,10 @@
         .btn:not(.active):not(:hover) { animation: pulse-border 3s infinite ease-in-out; }
         .btn:hover { background: #fff; border-color: var(--blue); color: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(37, 99, 235, 0.15); animation: none; }
         .btn.active { background: linear-gradient(135deg, var(--blue), var(--indigo)); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); transform: scale(1.05); animation: none; z-index: 10; }
+        
+        /* Style spécial pour le bouton Direction */
+        .btn-purple:hover { border-color: var(--purple); color: var(--purple); box-shadow: 0 6px 12px rgba(147, 51, 234, 0.15); }
+        .btn-purple.active { background: linear-gradient(135deg, var(--purple), #7e22ce); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4); }
 
         nav { position: sticky; top: 0; z-index: 50; background: var(--nav-bg); border-bottom: 1px solid var(--border); padding: 0.75rem 0; backdrop-filter: blur(8px); }
 
@@ -128,7 +131,13 @@
         </div>
         <div class="flex gap-2 flex-wrap justify-end">
             <button class="btn active" id="btn-actuel" onclick="switchTab('actuel')">ACTUEL (39)</button>
-            <button class="btn" id="btn-projet" onclick="switchTab('projet')">PROJET (44)</button>
+            
+            <!-- Groupe Projet/Direction -->
+            <div class="flex flex-col gap-1">
+                <button class="btn" id="btn-projet" onclick="switchTab('projet')">PROJET (44)</button>
+                <button class="btn btn-purple" id="btn-direction" onclick="switchTab('direction')" style="font-size:0.7rem; padding:0.4rem 0.8rem; border-color:var(--purple); color:var(--purple);">GRILLE 44 DIRECTION</button>
+            </div>
+
             <div class="flex flex-col gap-1">
                 <button class="btn" id="btn-cible" onclick="switchTab('cible')">CIBLE (47)</button>
                 <button class="btn" id="btn-vierge" onclick="switchTab('vierge')" style="padding:0.3rem 0.8rem; font-size:0.75rem; border-style:dashed;">VIERGE</button>
@@ -253,7 +262,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="td-left">Indicateur</th><th>ACTUEL (39)</th><th>PROJET (44)</th><th>CIBLE (47)</th>
+                        <th class="td-left">Indicateur</th><th>ACTUEL (39)</th><th>PROJET (44)</th><th>DIRECTION (44)</th><th>CIBLE (47)</th>
                     </tr>
                 </thead>
                 <tbody id="compare-body"></tbody>
@@ -279,6 +288,7 @@
     const TARGETS = {
         "actuel": { "J2E":[2,2,2,2,2,2,2], "J60H":[0,0,0,0,0,0,0], "JMC":[0,1,1,1,1,0,0], "JR24":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[2,2,2,2,2,2,2], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "projet": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[2,2,2,2,2,2,2], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
+        "direction": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[2,2,2,2,2,2,2], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "cible": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[3,3,3,3,3,3,3], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "vierge": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[3,3,3,3,3,3,3], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] }
     };
@@ -291,8 +301,55 @@
         ["RH", "RH", "RH", "RH", "JR1", "J2E", "J60H"], ["RH", "RH", "J2E", "JFP", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["JS4", "NS3", "RH", "RH", "RH", "RH", "J2E"], ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"], ["J60H", "JS3", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "RH", "RH", "RH", "NS3", "N2E"], ["RH", "RH", "RH", "RH", "J2E", "J60H", "J60H"], ["RH", "RH", "JS4", "J2E", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["JS3", "NS4", "RH", "RH", "RH", "RH", "JS4"], ["N2E", "RH", "RH", "RH", "RH", "J60H", "J60H"], ["RH", "RH", "J60H", "JS3", "NS4", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "JS3", "N2E"], ["NS4", "RH", "RH", "RH", "RH", "JS4", "J60H"], ["RH", "RH", "JFP", "J60H", "J60H", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "RH", "J60H"], ["NS4", "RH", "RH", "RH", "RH", "J60H", "JS3"], ["N2E", "RH", "RH", "J2E", "J2E", "RH", "RH"], ["J60H", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "J60H", "JFP", "N2E", "RH", "RH", "RH"], ["J2E", "J60H", "RH", "RH", "RH", "N2E", "NS3"], ["RH", "RH", "RH", "JS4", "JS4", "NS3", "RH"], ["RH", "JS3", "J60H", "N2E", "RH", "RH", "RH"], ["J2E", "NS3", "NS4", "RH", "RH", "RH", "RH"], ["RH", "RH", "JR1", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "J60H", "JR1", "RH", "RH", "J60H"], ["J60H", "N2E", "RH", "RH", "RH", "J2E", "NS4"], ["NS3", "RH", "RH", "RH", "RH", "JS4", "J2E"], ["RH", "RH", "J2E", "J60H", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["J60H", "NS4", "RH", "RH", "RH", "RH", "JS3"], ["JS4", "RH", "RH", "RH", "J2E", "NS4", "NS4"], ["RH", "RH", "RH", "JS4", "JS4", "NS4", "RH"], ["RH", "RH", "JS3", "J2E", "NS4", "RH", "RH"], ["RH", "J2E", "JS4", "RH", "RH", "RH", "J2E"], ["JS3", "N2E", "RH", "RH", "RH", "J2E", "NS3"], ["NS3", "RH", "RH", "RH", "RH", "JS3", "JS4"], ["RH", "RH", "JS3", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "RH", "JFP", "JS3", "N2E", "RH"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["J2E", "J60H", "N2E", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "RH", "J60H", "J60H", "J60H"]
     ];
 
+    const RAW_DATA_DIRECTION = [
+        ["RH","RH","RH","RH","JR1","J2E","J60H"],
+        ["RH","RH","J2E","J60H","N2E","RH","RH"],
+        ["RH","J2E","NS3","NS4","RH","RH","RH"],
+        ["N2E","NS3","RH","RH","RH","RH","J2E"],
+        ["J60H","RH","RH","RH","JS3","N2E","RH"],
+        ["RH","RH","J60H","J2E","J60H","RH","RH"],
+        ["RH","JS3","J60H","RH","RH","NS3","N2E"],
+        ["RH","RH","RH","RH","J2E","J2E","J60H"],
+        ["RH","RH","JS4","J60H","NS3","RH","RH"],
+        ["RH","JS4","N2E","NS3","RH","RH","RH"],
+        ["JS3","NS4","RH","RH","RH","RH","JS4"],
+        ["N2E","RH","RH","RH","RH","J60H","J60H"],
+        ["RH","RH","J60H","JS3","NS4","RH","RH"],
+        ["RH","JFP","J60H","RH","RH","JS3","N2E"],
+        ["NS4","RH","RH","RH","RH","JS4","J60H"],
+        ["RH","RH","JFP","JS3","J60H","RH","RH"],
+        ["RH","J2E","J60H","N2E","RH","RH","RH"],
+        ["NS4","NS3","RH","RH","RH","RH","JS3"],
+        ["JS4","RH","RH","J2E","J2E","RH","RH"],
+        ["J60H","J60H","NS4","RH","RH","RH","RH"],
+        ["RH","JFP","JR1","J60H","RH","RH","RH"],
+        ["J2E","JFP","RH","RH","RH","N2E","NS3"],
+        ["RH","RH","RH","J60H","JS4","J60H","RH"],
+        ["RH","JS3","J60H","N2E","RH","RH","RH"],
+        ["J2E","N2E","NS4","RH","RH","RH","RH"], /* L25 Corrected to N2E */
+        ["RH","RH","RH","JS4","J60H","NS4","RH"],
+        ["RH","RH","J60H","JR1","RH","RH","J60H"],
+        ["J60H","J60H","RH","RH","RH","J2E","NS4"],
+        ["NS3","RH","RH","RH","RH","JS4","J2E"],
+        ["RH","RH","J2E","J60H","NS3","RH","RH"],
+        ["RH","JS4","N2E","NS3","RH","RH","RH"],
+        ["J60H","NS4","RH","RH","RH","RH","JS3"],
+        ["JS4","RH","RH","RH","J2E","NS3","NS4"],
+        ["RH","RH","RH","JS4","JS4","NS4","RH"],
+        ["RH","RH","JS3","J2E","NS4","RH","RH"],
+        ["RH","JFP","JS4","J60H","RH","RH","RH"],
+        ["JS3","N2E","RH","RH","RH","J60H","NS3"],
+        ["NS3","RH","RH","RH","RH","JS3","JS4"],
+        ["RH","RH","JS3","J60H","J60H","RH","RH"],
+        ["RH","RH","RH","RH","JS3","J60H","J60H"],
+        ["RH","RH","J2E","J60H","N2E","RH","RH"],
+        ["RH","J2E","NS3","NS4","RH","RH","RH"],
+        ["J2E","JFP","RH","RH","RH","RH","J2E"],
+        ["J60H","RH","RH","RH","RH","J60H","J60H"]
+    ];
+
     const RAW_DATA_CIBLE = [
-        ["RH", "RH", "RH", "RH", "JR1", "J2E", "J60H"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["JS4", "NS3", "RH", "RH", "RH", "RH", "J2E"], ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"], ["J60H", "JS3", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "RH", "RH", "RH", "NS3", "N2E"], ["RH", "RH", "RH", "RH", "J2E", "J60H", "J60H"], ["RH", "RH", "JS4", "J2E", "NS3", "RH", "RH"], ["RH", "JS4", "JFP", "NS3", "RH", "RH", "RH"], ["JS3", "NS4", "RH", "RH", "RH", "RH", "JS4"], ["N2E", "RH", "RH", "RH", "RH", "J60H", "J60H"], ["RH", "RH", "J60H", "J60H", "NS4", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "JS3", "N2E"], ["NS4", "RH", "RH", "RH", "RH", "JS4", "J60H"], ["RH", "RH", "JFP", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "J60H", "RH", "RH", "RH", "J60H"], ["NS4", "RH", "RH", "RH", "RH", "J60H", "JS3"], ["N2E", "RH", "RH", "J2E", "J2E", "RH", "RH"], ["J60H", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "J60H", "JR1", "N2E", "RH", "RH", "RH"], ["J2E", "NS3", "RH", "RH", "RH", "N2E", "NS3"], ["RH", "RH", "RH", "JFP", "JS4", "NS3", "RH"], ["RH", "JS3", "J60H", "N2E", "RH", "RH", "RH"], ["J2E", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "JS4", "JS4", "NS4", "RH"], ["RH", "RH", "J60H", "JR1", "J60H", "RH", "RH"], ["J60H", "N2E", "RH", "RH", "RH", "J2E", "NS4"], ["NS3", "RH", "RH", "RH", "RH", "JS4", "J2E"], ["RH", "RH", "J2E", "JS4", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["J60H", "NS4", "RH", "RH", "RH", "RH", "JS3"], ["JS4", "RH", "RH", "RH", "J2E", "NS4", "NS4"], ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "JS3", "J2E", "NS4", "RH", "RH"], ["RH", "J60H", "JS4", "RH", "RH", "RH", "J2E"], ["JS3", "N2E", "RH", "RH", "RH", "J2E", "NS3"], ["NS3", "RH", "RH", "RH", "RH", "JS3", "JS4"], ["RH", "RH", "JS3", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "RH", "JFP", "JS3", "N2E", "RH"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "N2E", "NS4", "RH", "RH", "RH"], ["J2E", "J60H", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "NS3", "RH", "RH", "RH", "RH"], ["N2E", "N2E", "RH", "RH", "RH", "J60H", "N2E"], ["RH", "RH", "RH", "JS3", "J60H", "N2E", "RH"], ["RH", "J60H", "JFP", "N2E", "RH", "RH", "RH"]
+        ["RH", "RH", "RH", "RH", "JR1", "J2E", "J60H"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["JS4", "NS3", "RH", "RH", "RH", "RH", "J2E"], ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"], ["J60H", "JS3", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "RH", "RH", "RH", "NS3", "N2E"], ["RH", "RH", "RH", "RH", "J2E", "J60H", "J60H"], ["RH", "RH", "JS4", "J2E", "NS3", "RH", "RH"], ["RH", "JS4", "JFP", "NS3", "RH", "RH", "RH"], ["JS3", "NS4", "RH", "RH", "RH", "RH", "JS4"], ["N2E", "RH", "RH", "RH", "RH", "J60H", "J60H"], ["RH", "RH", "J60H", "J60H", "NS4", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "JS3", "N2E"], ["NS4", "RH", "RH", "RH", "RH", "JS4", "J60H"], ["RH", "RH", "JFP", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "J60H", "RH", "RH", "RH", "J60H"], ["NS4", "RH", "RH", "RH", "RH", "J60H", "JS3"], ["N2E", "RH", "RH", "J2E", "J2E", "RH", "RH"], ["J60H", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "J60H", "JR1", "N2E", "RH", "RH", "RH"], ["J2E", "NS3", "RH", "RH", "RH", "N2E", "NS3"], ["RH", "RH", "RH", "JFP", "JS4", "NS3", "RH"], ["RH", "JS3", "J60H", "N2E", "RH", "RH", "RH"], ["J2E", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "JS4", "JS4", "NS4", "RH"], ["RH", "RH", "J60H", "JR1", "J60H", "RH", "RH"], ["J60H", "N2E", "RH", "RH", "RH", "J2E", "NS4"], ["NS3", "RH", "RH", "RH", "RH", "JS4", "J2E"], ["RH", "RH", "J2E", "JS4", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["J60H", "NS4", "RH", "RH", "RH", "RH", "JS3"], ["JS4", "RH", "RH", "RH", "J2E", "NS4", "NS4"], ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "JS3", "J2E", "NS4", "RH", "RH"], ["RH", "J60H", "JS4", "RH", "RH", "RH", "J2E"], ["JS3", "N2E", "RH", "RH", "RH", "J2E", "NS3"], ["NS3", "RH", "RH", "RH", "RH", "JS3", "JS4"], ["RH", "RH", "JS3", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "RH", "JFP", "JS3", "N2E", "RH"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "N2E", "NS4", "RH", "RH", "RH"], ["J2E", "J60H", "N2E", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "RH", "J60H", "J60H", "J60H"], ["N2E", "N2E", "RH", "RH", "RH", "J60H", "N2E"], ["RH", "RH", "RH", "JS3", "J60H", "N2E", "RH"], ["RH", "J60H", "JFP", "N2E", "RH", "RH", "RH"]
     ];
     
     const RAW_DATA_VIERGE = Array.from({length: 47}, () => Array(7).fill("RH"));
@@ -302,6 +359,7 @@
         data: {
             actuel: RAW_DATA_ACTUEL.map((p,i)=>({id:i+1, planning:p})),
             projet: RAW_DATA_PROJET.map((p,i)=>({id:i+1, planning:p})),
+            direction: RAW_DATA_DIRECTION.map((p,i)=>({id:i+1, planning:p})),
             cible: RAW_DATA_CIBLE.map((p,i)=>({id:i+1, planning:p})),
             vierge: RAW_DATA_VIERGE.map((p,i)=>({id:i+1, planning:p}))
         }
@@ -448,28 +506,33 @@
     }
 
     function renderCompare() {
-        const s1 = calculateGridStats(appState.data.actuel), s2 = calculateGridStats(appState.data.projet), s3 = calculateGridStats(appState.data.cible);
+        const s1 = calculateGridStats(appState.data.actuel), s2 = calculateGridStats(appState.data.projet), sD = calculateGridStats(appState.data.direction), s3 = calculateGridStats(appState.data.cible);
         const tb = document.getElementById('compare-body'); tb.innerHTML = '';
-        const row = (l, v1, v2, v3, f=(x)=>x, rev=false) => {
-            const d2=v2-v1, d3=v3-v1;
+        const row = (l, v1, v2, vD, v3, f=(x)=>x, rev=false) => {
+            const d2=v2-v1, dD=vD-v1, d3=v3-v1;
             const c2 = d2===0 ? 'text-muted' : ((d2>0 ^ rev) ? 'text-red' : 'text-emerald');
+            const cD = dD===0 ? 'text-muted' : ((dD>0 ^ rev) ? 'text-red' : 'text-emerald');
             const c3 = d3===0 ? 'text-muted' : ((d3>0 ^ rev) ? 'text-red' : 'text-emerald');
-            return `<tr><td class="td-left font-bold text-muted text-sm">${l}</td><td class="font-bold">${f(v1)}</td><td class="font-bold">${f(v2)} <span class="text-xs ${c2}">(${d2>0?'+':''}${f(d2)})</span></td><td class="font-bold">${f(v3)} <span class="text-xs ${c3}">(${d3>0?'+':''}${f(d3)})</span></td></tr>`;
+            return `<tr><td class="td-left font-bold text-muted text-sm">${l}</td>
+                <td class="font-bold">${f(v1)}</td>
+                <td class="font-bold">${f(v2)} <span class="text-xs ${c2}">(${d2>0?'+':''}${f(d2)})</span></td>
+                <td class="font-bold text-purple">${f(vD)} <span class="text-xs ${cD}">(${dD>0?'+':''}${f(dD)})</span></td>
+                <td class="font-bold">${f(v3)} <span class="text-xs ${c3}">(${d3>0?'+':''}${f(d3)})</span></td></tr>`;
         };
-        let h = row("Durée Hebdo", s1.moy, s2.moy, s3.moy, fmt);
-        h += row("Vacations / An", s1.vacAn, s2.vacAn, s3.vacAn);
-        h += row("Total Heures Nuit / An", Math.round(s1.nuitAn*8), Math.round(s2.nuitAn*8), Math.round(s3.nuitAn*8), x=>x+'h');
-        h += row("Dimanches Repos", Math.round(52-s1.dimAn), Math.round(52-s2.dimAn), Math.round(52-s3.dimAn), x=>x, true);
-        h += row("WE Complets", Math.round(s1.weAn), Math.round(s2.weAn), Math.round(s3.weAn), x=>x, true);
-        h += row("Total Majoré (Moy/Mois)", s1.majMois, s2.majMois, s3.majMois, fmt, true);
-        h += row("Score Physio (An)", s1.physAn, s2.physAn, s3.physAn, x=>x, false);
-        h += row("Score Social (An)", s1.socAn, s2.socAn, s3.socAn, x=>x, false);
+        let h = row("Durée Hebdo", s1.moy, s2.moy, sD.moy, s3.moy, fmt);
+        h += row("Vacations / An", s1.vacAn, s2.vacAn, sD.vacAn, s3.vacAn);
+        h += row("Total Heures Nuit / An", Math.round(s1.nuitAn*8), Math.round(s2.nuitAn*8), Math.round(sD.nuitAn*8), Math.round(s3.nuitAn*8), x=>x+'h');
+        h += row("Dimanches Repos", Math.round(52-s1.dimAn), Math.round(52-s2.dimAn), Math.round(52-sD.dimAn), Math.round(52-s3.dimAn), x=>x, true);
+        h += row("WE Complets", Math.round(s1.weAn), Math.round(s2.weAn), Math.round(sD.weAn), Math.round(s3.weAn), x=>x, true);
+        h += row("Total Majoré (Moy/Mois)", s1.majMois, s2.majMois, sD.majMois, s3.majMois, fmt, true);
+        h += row("Score Physio (An)", s1.physAn, s2.physAn, sD.physAn, s3.physAn, x=>x, false);
+        h += row("Score Social (An)", s1.socAn, s2.socAn, sD.socAn, s3.socAn, x=>x, false);
         tb.innerHTML = h;
     }
 
     function switchTab(m) {
         appState.mode = m;
-        ['actuel','projet','cible','compare','vierge'].forEach(x => {
+        ['actuel','projet','direction','cible','compare','vierge'].forEach(x => {
             const b = document.getElementById('btn-'+x);
             if(b) { if(x===m) { b.classList.add('active'); b.classList.remove('text-muted'); } else { b.classList.remove('active'); b.classList.add('text-muted'); } }
         });
