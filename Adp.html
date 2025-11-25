@@ -172,6 +172,8 @@
                 <button class="btn" id="btn-vierge" onclick="switchTab('vierge')" style="padding:0.3rem 0.8rem; font-size:0.75rem; border-style:dashed;">GRILLE 47 VIERGE</button>
             </div>
             
+            <button class="btn" id="btn-cycle47" onclick="switchTab('cycle47')" style="border-color:var(--teal); color:var(--teal);">Cyclé 47</button>
+
             <!-- Boutons Perso (Initialement masqués) -->
             <button id="btn-perso" class="btn hidden" onclick="switchTab('perso')" style="border-style:dashed; border-color:var(--blue);">PERSO</button>
             <!-- Bouton PLUS -->
@@ -297,7 +299,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="td-left">Indicateur</th><th>ACTUEL (39)</th><th>PROJET (44)</th><th>DIRECTION (44)</th><th>CIBLE (47)</th>
+                        <th class="td-left">Indicateur</th><th>ACTUEL (39)</th><th>PROJET (44)</th><th>DIRECTION (44)</th><th>CIBLE (47)</th><th>CYCLÉ 47</th>
                     </tr>
                 </thead>
                 <tbody id="compare-body"></tbody>
@@ -347,6 +349,7 @@
         "projet": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[2,2,2,2,2,2,2], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "direction": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[2,2,2,2,2,2,2], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "cible": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[3,3,3,3,3,3,3], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
+        "cycle47": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[3,3,3,3,3,3,3], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] },
         "vierge": { "J2E":[3,3,3,3,3,3,3], "J60H":[0,0,0,0,0,0,0], "JFP":[0,5,0,0,0,0,0], "JR1":[0,0,0,0,0,0,0], "JS3":[2,2,2,2,2,2,2], "JS4":[2,2,2,2,2,2,2], "N2E":[3,3,3,3,3,3,3], "NS3":[2,2,2,2,2,2,2], "NS4":[2,2,2,2,2,2,2] }
     };
 
@@ -406,9 +409,66 @@
     ];
 
     const RAW_DATA_CIBLE = [
-        ["RH", "RH", "RH", "RH", "JR1", "J2E", "J60H"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["JS4", "NS3", "RH", "RH", "RH", "RH", "J2E"], ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"], ["J60H", "JS3", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "RH", "RH", "RH", "NS3", "N2E"], ["RH", "RH", "RH", "RH", "J2E", "J60H", "J60H"], ["RH", "RH", "JS4", "J2E", "NS3", "RH", "RH"], ["RH", "JS4", "JFP", "NS3", "RH", "RH", "RH"], ["JS3", "NS4", "RH", "RH", "RH", "RH", "JS4"], ["N2E", "RH", "RH", "RH", "RH", "J60H", "J60H"], ["RH", "RH", "J60H", "J60H", "NS4", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "JS3", "N2E"], ["NS4", "RH", "RH", "RH", "RH", "JS4", "J60H"], ["RH", "RH", "JFP", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "J60H", "RH", "RH", "RH", "J60H"], ["NS4", "RH", "RH", "RH", "RH", "J60H", "JS3"], ["N2E", "RH", "RH", "J2E", "J2E", "RH", "RH"], ["J60H", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "J60H", "JR1", "N2E", "RH", "RH", "RH"], ["J2E", "NS3", "RH", "RH", "RH", "N2E", "NS3"], ["RH", "RH", "RH", "JFP", "JS4", "NS3", "RH"], ["RH", "JS3", "J60H", "N2E", "RH", "RH", "RH"], ["J2E", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "JS4", "JS4", "NS4", "RH"], ["RH", "RH", "J60H", "JR1", "J60H", "RH", "RH"], ["J60H", "N2E", "RH", "RH", "RH", "J2E", "NS4"], ["NS3", "RH", "RH", "RH", "RH", "JS4", "J2E"], ["RH", "RH", "J2E", "JS4", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["J60H", "NS4", "RH", "RH", "RH", "RH", "JS3"], ["JS4", "RH", "RH", "RH", "J2E", "NS4", "NS4"], ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "JS3", "J2E", "NS4", "RH", "RH"], ["RH", "J60H", "JS4", "RH", "RH", "RH", "J2E"], ["JS3", "N2E", "RH", "RH", "RH", "J2E", "NS3"], ["NS3", "RH", "RH", "RH", "RH", "JS3", "JS4"], ["RH", "RH", "JS3", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "RH", "JFP", "JS3", "N2E", "RH"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "N2E", "NS4", "RH", "RH", "RH"], ["J2E", "J60H", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "NS3", "RH", "RH", "RH", "RH"], ["N2E", "N2E", "RH", "RH", "RH", "J60H", "N2E"], ["RH", "RH", "RH", "JS3", "J60H", "N2E", "RH"], ["RH", "J60H", "JFP", "N2E", "RH", "RH", "RH"]
+        ["RH", "RH", "RH", "RH", "JR1", "J2E", "J60H"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "NS3", "NS4", "RH", "RH", "RH"], ["JS4", "NS3", "RH", "RH", "RH", "RH", "J2E"], ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"], ["J60H", "JS3", "N2E", "RH", "RH", "RH", "RH"], ["J60H", "J60H", "RH", "RH", "RH", "NS3", "N2E"], ["RH", "RH", "RH", "RH", "J2E", "J60H", "J60H"], ["RH", "RH", "JS4", "J2E", "NS3", "RH", "RH"], ["RH", "JS4", "JFP", "NS3", "RH", "RH", "RH"], ["JS3", "NS4", "RH", "RH", "RH", "RH", "JS4"], ["N2E", "RH", "RH", "RH", "RH", "J60H", "J60H"], ["RH", "RH", "J60H", "J60H", "NS4", "RH", "RH"], ["RH", "J60H", "J60H", "RH", "RH", "JS3", "N2E"], ["NS4", "RH", "RH", "RH", "RH", "JS4", "J60H"], ["RH", "RH", "JFP", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "J60H", "RH", "RH", "RH", "J60H"], ["NS4", "RH", "RH", "RH", "RH", "J60H", "JS3"], ["N2E", "RH", "RH", "J2E", "J2E", "RH", "RH"], ["J60H", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "J60H", "JR1", "N2E", "RH", "RH", "RH"], ["J2E", "NS3", "RH", "RH", "RH", "N2E", "NS3"], ["RH", "RH", "RH", "JFP", "JS4", "NS3", "RH"], ["RH", "JS3", "J60H", "N2E", "RH", "RH", "RH"], ["J2E", "J60H", "NS4", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "JS4", "JS4", "NS4", "RH"], ["RH", "RH", "J60H", "JR1", "J60H", "RH", "RH"], ["J60H", "N2E", "RH", "RH", "RH", "J2E", "NS4"], ["NS3", "RH", "RH", "RH", "RH", "JS4", "J2E"], ["RH", "RH", "J2E", "JS4", "NS3", "RH", "RH"], ["RH", "JS4", "J60H", "NS3", "RH", "RH", "RH"], ["J60H", "NS4", "RH", "RH", "RH", "RH", "JS3"], ["JS4", "RH", "RH", "RH", "J2E", "NS4", "NS4"], ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "JS3", "J2E", "NS4", "RH", "RH"], ["RH", "J60H", "JS4", "RH", "RH", "RH", "J2E"], ["JS3", "N2E", "RH", "RH", "RH", "J2E", "NS3"], ["NS3", "RH", "RH", "RH", "RH", "JS3", "JS4"], ["RH", "RH", "JS3", "J60H", "J60H", "RH", "RH"], ["RH", "RH", "RH", "JFP", "JS3", "N2E", "RH"], ["RH", "RH", "J2E", "J60H", "N2E", "RH", "RH"], ["RH", "J2E", "N2E", "NS4", "RH", "RH", "RH"], ["J2E", "J60H", "N2E", "RH", "RH", "RH", "RH"], ["RH", "RH", "RH", "RH", "J60H", "J60H", "NS3"]
     ];
     
+    // --- GENERATION CYCLE 47 (Rectifié selon image) ---
+    const DATA_CYCLE47 = [
+        ["NS4", "RH", "RH", "RH", "N2E", "N2E", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "NS3", "NS3", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "J60H", "JS3"],
+        ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"],
+        ["RH", "JS4", "JS4", "NS4", "RH", "RH", "RH"],
+        ["JS4", "JFP", "RH", "RH", "RH", "J60H", "NS4"],
+        
+        ["NS4", "RH", "RH", "RH", "N2E", "N2E", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "NS3", "NS3", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "J60H", "JS4"],
+        ["J60H", "RH", "RH", "JS3", "JS3", "RH", "RH"],
+        ["RH", "JS4", "JS4", "NS4", "RH", "RH", "RH"],
+        ["JS4", "JFP", "RH", "RH", "RH", "J60H", "NS4"],
+        
+        ["NS3", "RH", "RH", "RH", "N2E", "N2E", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "NS4", "NS4", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "J60H", "JS4"],
+        ["J60H", "RH", "RH", "JS4", "JS4", "RH", "RH"],
+        ["RH", "JS3", "JS3", "NS3", "RH", "RH", "RH"],
+        ["JS3", "JFP", "RH", "RH", "RH", "J60H", "NS3"],
+
+        ["NS3", "RH", "RH", "RH", "NS4", "NS4", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "NS4", "NS4", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "J60H", "J2E"],
+        ["J60H", "RH", "RH", "J2E", "J2E", "RH", "RH"],
+        ["RH", "J2E", "J2E", "N2E", "RH", "RH", "RH"],
+        ["JS3", "JFP", "RH", "RH", "RH", "J2E", "N2E"],
+
+        ["N2E", "RH", "RH", "RH", "NS4", "NS3", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "N2E", "N2E", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "J2E", "J2E"],
+        ["J60H", "RH", "RH", "J2E", "J2E", "RH", "RH"],
+        ["RH", "J2E", "J2E", "N2E", "RH", "RH", "RH"],
+        ["J2E", "JFP", "RH", "RH", "RH", "J2E", "N2E"],
+
+        ["N2E", "RH", "RH", "RH", "NS3", "NS3", "RH"],
+        ["RH", "RH", "J60H", "J60H", "J60H", "RH", "RH"],
+        ["RH", "N2E", "N2E", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "JS4", "JS3"],
+        ["J60H", "RH", "RH", "J2E", "JS4", "RH", "RH"],
+        ["RH", "J2E", "J2E", "N2E", "RH", "RH", "RH"],
+        ["J2E", "JS3", "RH", "RH", "RH", "JS4", "N2E"],
+
+        ["N2E", "RH", "RH", "RH", "NS3", "NS4", "RH"],
+        ["RH", "RH", "JS3", "JS4", "J2E", "RH", "RH"],
+        ["RH", "N2E", "N2E", "RH", "RH", "RH", "J60H"],
+        ["J60H", "RH", "RH", "RH", "RH", "JS3", "J2E"],
+        ["J2E", "RH", "RH", "RH", "RH", "JS3", "NS3"]
+    ];
+
     const RAW_DATA_VIERGE = Array.from({length: 47}, () => Array(7).fill("RH"));
 
     let appState = {
@@ -418,6 +478,7 @@
             projet: RAW_DATA_PROJET.map((p,i)=>({id:i+1, planning:p})),
             direction: RAW_DATA_DIRECTION.map((p,i)=>({id:i+1, planning:p})),
             cible: RAW_DATA_CIBLE.map((p,i)=>({id:i+1, planning:p})),
+            cycle47: DATA_CYCLE47.map((p,i)=>({id:i+1, planning:p})),
             vierge: RAW_DATA_VIERGE.map((p,i)=>({id:i+1, planning:p})),
             perso: []
         }
@@ -454,6 +515,7 @@
                 if (!h || h.type === 'repos') { flat.push(0); return; }
                 flat.push(1); wD++; totVac++;
                 
+                // Split Calculation
                 const start = h.start, end = h.end;
                 for (let t = start; t < end; t += 0.5) {
                     let hour = t % 24;
@@ -509,8 +571,14 @@
 
     function updateCell(r, c, val) { appState.data[appState.mode][r].planning[c] = val; render(); }
 
-    function openModal() { document.getElementById('custom-modal').classList.remove('hidden'); }
-    function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); }
+    // GESTION MODALE (Popup intégrée)
+    function openModal() {
+        document.getElementById('custom-modal').classList.remove('hidden'); // Fix for visibility
+    }
+
+    function closeModal() {
+        document.getElementById('custom-modal').classList.add('hidden'); // Fix for visibility
+    }
 
     function confirmCustomGrid() {
         let lines = parseInt(document.getElementById('modal-lines').value);
@@ -578,9 +646,14 @@
 
     function renderRules(d) {
         const tb = document.getElementById('rules-body'); tb.innerHTML = '';
-        const tg = TARGETS[appState.mode] || {};
+        // FIX: Pour Cycle 47, on utilise les règles de CIBLE (comme demandé)
+        let targetKey = appState.mode;
+        if (targetKey === 'cycle47') targetKey = 'cible';
+        
+        const tg = TARGETS[targetKey] || {};
         const counts = {}; Object.keys(tg).forEach(k => counts[k] = [0,0,0,0,0,0,0]);
         d.forEach(r => r.planning.forEach((c, i) => { if(counts[c]) counts[c][i]++; }));
+        
         Object.keys(tg).forEach(k => {
             const tr = document.createElement('tr');
             let h = `<td class="td-left font-bold flex items-center"><span class="${HORAIRES[k]?.colorClass} w-3 h-3 inline-block rounded mr-2"></span>${k}</td>`;
@@ -594,27 +667,29 @@
     }
 
     function renderCompare() {
-        const s1 = calculateGridStats(appState.data.actuel), s2 = calculateGridStats(appState.data.projet), sD = calculateGridStats(appState.data.direction), s3 = calculateGridStats(appState.data.cible);
+        const s1 = calculateGridStats(appState.data.actuel), s2 = calculateGridStats(appState.data.projet), sD = calculateGridStats(appState.data.direction), s3 = calculateGridStats(appState.data.cible), sC = calculateGridStats(appState.data.cycle47);
         const tb = document.getElementById('compare-body'); tb.innerHTML = '';
-        const row = (l, v1, v2, vD, v3, f=(x)=>x, rev=false) => {
-            const d2=v2-v1, dD=vD-v1, d3=v3-v1;
+        const row = (l, v1, v2, vD, v3, vC, f=(x)=>x, rev=false) => {
+            const d2=v2-v1, dD=vD-v1, d3=v3-v1, dC=vC-v1;
             const c2 = d2===0 ? 'text-muted' : ((d2>0 ^ rev) ? 'text-red' : 'text-emerald');
             const cD = dD===0 ? 'text-muted' : ((dD>0 ^ rev) ? 'text-red' : 'text-emerald');
             const c3 = d3===0 ? 'text-muted' : ((d3>0 ^ rev) ? 'text-red' : 'text-emerald');
+            const cC = dC===0 ? 'text-muted' : ((dC>0 ^ rev) ? 'text-red' : 'text-emerald');
             return `<tr><td class="td-left font-bold text-muted text-sm">${l}</td>
                 <td class="font-bold">${f(v1)}</td>
                 <td class="font-bold">${f(v2)} <span class="text-xs ${c2}">(${d2>0?'+':''}${f(d2)})</span></td>
                 <td class="font-bold text-purple">${f(vD)} <span class="text-xs ${cD}">(${dD>0?'+':''}${f(dD)})</span></td>
-                <td class="font-bold">${f(v3)} <span class="text-xs ${c3}">(${d3>0?'+':''}${f(d3)})</span></td></tr>`;
+                <td class="font-bold">${f(v3)} <span class="text-xs ${c3}">(${d3>0?'+':''}${f(d3)})</span></td>
+                <td class="font-bold text-teal">${f(vC)} <span class="text-xs ${cC}">(${dC>0?'+':''}${f(dC)})</span></td></tr>`;
         };
-        let h = row("Durée Hebdo", s1.moy, s2.moy, sD.moy, s3.moy, fmt);
-        h += row("Vacations / An", s1.vacAn, s2.vacAn, sD.vacAn, s3.vacAn);
-        h += row("Total Heures Nuit / An", Math.round(s1.nuitAn*8), Math.round(s2.nuitAn*8), Math.round(sD.nuitAn*8), Math.round(s3.nuitAn*8), x=>x+'h');
-        h += row("Dimanches Repos", Math.round(52-s1.dimAn), Math.round(52-s2.dimAn), Math.round(52-sD.dimAn), Math.round(52-s3.dimAn), x=>x, true);
-        h += row("WE Complets", Math.round(s1.weAn), Math.round(s2.weAn), Math.round(sD.weAn), Math.round(s3.weAn), x=>x, true);
-        h += row("Total Majoré (Moy/Mois)", s1.majMois, s2.majMois, sD.majMois, s3.majMois, fmt, true);
-        h += row("Score Physio (An)", s1.physAn, s2.physAn, sD.physAn, s3.physAn, x=>x, false);
-        h += row("Score Social (An)", s1.socAn, s2.socAn, sD.socAn, s3.socAn, x=>x, false);
+        let h = row("Durée Hebdo", s1.moy, s2.moy, sD.moy, s3.moy, sC.moy, fmt);
+        h += row("Vacations / An", s1.vacAn, s2.vacAn, sD.vacAn, s3.vacAn, sC.vacAn);
+        h += row("Total Heures Nuit / An", Math.round(s1.nuitAn*8), Math.round(s2.nuitAn*8), Math.round(sD.nuitAn*8), Math.round(s3.nuitAn*8), Math.round(sC.nuitAn*8), x=>x+'h');
+        h += row("Dimanches Repos", Math.round(52-s1.dimAn), Math.round(52-s2.dimAn), Math.round(52-sD.dimAn), Math.round(52-s3.dimAn), Math.round(52-sC.dimAn), x=>x, true);
+        h += row("WE Complets", Math.round(s1.weAn), Math.round(s2.weAn), Math.round(sD.weAn), Math.round(s3.weAn), Math.round(sC.weAn), x=>x, true);
+        h += row("Total Majoré (Moy/Mois)", s1.majMois, s2.majMois, sD.majMois, s3.majMois, sC.majMois, fmt, true);
+        h += row("Score Physio (An)", s1.physAn, s2.physAn, sD.physAn, s3.physAn, sC.physAn, x=>x, false);
+        h += row("Score Social (An)", s1.socAn, s2.socAn, sD.socAn, s3.socAn, sC.socAn, x=>x, false);
         tb.innerHTML = h;
     }
 
@@ -645,7 +720,7 @@
 
     function switchTab(m) {
         appState.mode = m;
-        ['actuel','projet','direction','cible','compare','vierge','perso'].forEach(x => {
+        ['actuel','projet','direction','cible','compare','vierge','perso','cycle47'].forEach(x => {
             const b = document.getElementById('btn-'+x);
             if(b) { if(x===m) { b.classList.add('active'); b.classList.remove('text-muted'); } else { b.classList.remove('active'); b.classList.add('text-muted'); } }
         });
