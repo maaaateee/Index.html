@@ -10,6 +10,7 @@
             --bg-body: #f8fafc; --bg-card: #ffffff;
             --text-main: #1e293b; --text-muted: #64748b;
             --border: #e2e8f0; --nav-bg: rgba(255, 255, 255, 0.95);
+            --overlay: rgba(0, 0, 0, 0.5);
             
             /* Couleurs Métier */
             --blue: #2563eb; --blue-light: #eff6ff; --blue-text: #1e40af;
@@ -35,6 +36,7 @@
             --text-main: #f1f5f9; --text-muted: #94a3b8;
             --border: #334155; --nav-bg: rgba(15, 23, 42, 0.95);
             --c-void: #334155; --t-void: #64748b;
+            --overlay: rgba(0, 0, 0, 0.8);
 
             /* CORRECTIF DARK MODE - Fond des indicateurs sociaux */
             --orange-light: rgba(249, 115, 22, 0.15); --orange-text: #fb923c;
@@ -56,7 +58,7 @@
         .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
         .grid-4 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
         .flex { display: flex; } .flex-col { flex-direction: column; }
-        .items-center { align-items: center; } .justify-between { justify-content: space-between; } .justify-end { justify-content: flex-end; }
+        .items-center { align-items: center; } .justify-between { justify-content: space-between; } .justify-end { justify-content: flex-end; } .justify-center { justify-content: center; }
         .gap-2 { gap: 0.5rem; } .gap-4 { gap: 1rem; }
         .mt-2 { margin-top: 0.5rem; } .mt-4 { margin-top: 1rem; } .mb-4 { margin-bottom: 1rem; } .mb-8 { margin-bottom: 2rem; }
         .hidden { display: none !important; }
@@ -84,7 +86,6 @@
         .btn:hover { background: #fff; border-color: var(--blue); color: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(37, 99, 235, 0.15); animation: none; }
         .btn.active { background: linear-gradient(135deg, var(--blue), var(--indigo)); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); transform: scale(1.05); animation: none; z-index: 10; }
         
-        /* Style spécial pour le bouton Direction */
         .btn-purple:hover { border-color: var(--purple); color: var(--purple); box-shadow: 0 6px 12px rgba(147, 51, 234, 0.15); }
         .btn-purple.active { background: linear-gradient(135deg, var(--purple), #7e22ce); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4); }
 
@@ -97,11 +98,9 @@
         td { padding: 0.5rem; border: 1px solid var(--border); text-align: center; }
         .td-left { text-align: left; }
 
-        /* Typography */
+        /* Typography & Colors */
         .text-xs { font-size: 0.75rem; } .text-sm { font-size: 0.875rem; } .text-lg { font-size: 1.125rem; } .text-2xl { font-size: 1.5rem; } .text-3xl { font-size: 1.875rem; }
         .font-bold { font-weight: 700; } .uppercase { text-transform: uppercase; }
-        
-        /* Colors Util */
         .text-blue { color: var(--blue-text); } .text-indigo { color: var(--indigo-text); } .text-emerald { color: var(--emerald-text); }
         .text-purple { color: var(--purple-text); } .text-orange { color: var(--orange-text); } .text-red { color: var(--red-text); } .text-teal { color: var(--teal-text); }
 
@@ -123,10 +122,30 @@
         .comp-err { color: var(--red-text); font-weight: bold; }
         .comp-neutral { color: var(--text-muted); }
 
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay); z-index: 100; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 1rem; width: 320px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center; }
+        .modal-input { width: 100%; padding: 0.75rem; margin: 1rem 0; border: 2px solid var(--border); border-radius: 0.5rem; background: var(--bg-body); color: var(--text-main); font-size: 1.1rem; text-align: center; font-weight: bold; }
+        .modal-input:focus { border-color: var(--blue); outline: none; }
+
         svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
     </style>
 </head>
 <body>
+
+<!-- MODAL DE CREATION DE GRILLE (Remplace le prompt) -->
+<div id="custom-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="color:var(--blue); margin-bottom:1rem;"><svg style="width:3rem; height:3rem;" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg></div>
+        <h3 class="font-bold text-lg">Nouvelle Grille Perso</h3>
+        <p class="text-xs text-muted mb-4">Combien de lignes (agents) ?</p>
+        <input type="number" id="modal-lines" class="modal-input" placeholder="Ex: 12" min="1" max="100">
+        <div class="flex gap-2 justify-center mt-4">
+            <button onclick="closeModal()" class="btn">Annuler</button>
+            <button onclick="confirmCustomGrid()" class="btn" style="background:var(--blue); color:white; border:none;">Créer</button>
+        </div>
+    </div>
+</div>
 
 <nav>
     <div class="container flex justify-between items-center" style="flex-wrap: wrap; gap:10px;">
@@ -152,6 +171,12 @@
                 <button class="btn" id="btn-cible" onclick="switchTab('cible')">GRILLE 47</button>
                 <button class="btn" id="btn-vierge" onclick="switchTab('vierge')" style="padding:0.3rem 0.8rem; font-size:0.75rem; border-style:dashed;">GRILLE 47 VIERGE</button>
             </div>
+            
+            <!-- Boutons Perso (Initialement masqués) -->
+            <button id="btn-perso" class="btn hidden" onclick="switchTab('perso')" style="border-style:dashed; border-color:var(--blue);">PERSO</button>
+            <!-- Bouton PLUS -->
+            <button class="btn" onclick="openModal()" style="padding:0.6rem 1rem; font-weight:900; font-size:1.2rem; color:var(--blue);" title="Créer une grille personnalisée">+</button>
+
             <button class="btn" id="btn-compare" onclick="switchTab('compare')">COMPARATEUR</button>
             <button class="btn" onclick="document.documentElement.classList.toggle('dark')" style="border-radius:50%; padding:0.6rem; animation:none;">🌗</button>
         </div>
@@ -263,7 +288,7 @@
         </div>
     </div>
 
-    <!-- COMPARATOR -->
+    <!-- COMPARATOR (Standard) -->
     <div id="view-compare" class="card hidden">
         <div class="mb-4 pb-4 border-b border-gray-200">
             <h3 class="font-bold text-lg">Comparatif Global</h3>
@@ -280,6 +305,28 @@
         </div>
         <div class="mt-4 bg-blue-soft p-4 rounded text-xs text-blue-text border border-blue-200">
             <strong>Note:</strong> Score Pénibilité Physio = (Nuits + Vacations)/an. Score Pénibilité Social = (WE/Nuit Vendredi + Vacations)/an.
+        </div>
+    </div>
+
+    <!-- COMPARATOR (Perso) -->
+    <div id="view-compare-perso" class="card hidden mb-8 bg-blue-soft" style="border:1px solid var(--blue)">
+        <div class="mb-4 pb-4 border-b border-blue-200">
+            <h3 class="font-bold text-lg text-blue">Comparatif Spécial : Ma Grille vs Références</h3>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="td-left">Indicateur</th>
+                        <th style="background:white; border:2px solid var(--blue); color:var(--blue);">MA GRILLE</th>
+                        <th>ACTUEL (39)</th>
+                        <th>PROJET (44)</th>
+                        <th>DIRECTION (44)</th>
+                        <th>CIBLE (47)</th>
+                    </tr>
+                </thead>
+                <tbody id="compare-perso-body"></tbody>
+            </table>
         </div>
     </div>
 
@@ -336,7 +383,7 @@
         ["J2E","JFP","RH","RH","RH","N2E","NS3"],
         ["RH","RH","RH","J60H","JS4","J60H","RH"],
         ["RH","JS3","J60H","N2E","RH","RH","RH"],
-        ["J2E","N2E","NS4","RH","RH","RH","RH"], /* L25 Corrected to N2E */
+        ["J2E","N2E","NS4","RH","RH","RH","RH"], 
         ["RH","RH","RH","JS4","J60H","NS4","RH"],
         ["RH","RH","J60H","JR1","RH","RH","J60H"],
         ["J60H","J60H","RH","RH","RH","J2E","NS4"],
@@ -371,7 +418,8 @@
             projet: RAW_DATA_PROJET.map((p,i)=>({id:i+1, planning:p})),
             direction: RAW_DATA_DIRECTION.map((p,i)=>({id:i+1, planning:p})),
             cible: RAW_DATA_CIBLE.map((p,i)=>({id:i+1, planning:p})),
-            vierge: RAW_DATA_VIERGE.map((p,i)=>({id:i+1, planning:p}))
+            vierge: RAW_DATA_VIERGE.map((p,i)=>({id:i+1, planning:p})),
+            perso: []
         }
     };
 
@@ -381,6 +429,7 @@
         let rowStats = data.map(() => ({ dur:0, maj:0, rawNuit:0, rawDim:0 }));
         let nb = data.length || 1;
 
+        // Linear logic for series
         let linearSchedule = [];
         data.forEach(r => r.planning.forEach(c => linearSchedule.push(HORAIRES[c])));
         data.slice(0, 2).forEach(r => r.planning.forEach(c => linearSchedule.push(HORAIRES[c])));
@@ -449,7 +498,6 @@
         };
     }
 
-    /* CORRECTION CALCUL COMPARATEUR */
     function fmt(d) {
         const sign = d < 0 ? "-" : "";
         const abs = Math.abs(d);
@@ -460,6 +508,27 @@
     }
 
     function updateCell(r, c, val) { appState.data[appState.mode][r].planning[c] = val; render(); }
+
+    function openModal() { document.getElementById('custom-modal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); }
+
+    function confirmCustomGrid() {
+        let lines = parseInt(document.getElementById('modal-lines').value);
+        if (!lines || lines < 1) { alert('Veuillez entrer un nombre valide'); return; }
+        
+        const newGrid = Array.from({length: lines}, () => Array(7).fill("RH"));
+        appState.data.perso = newGrid.map((p,i)=>({id:i+1, planning:p}));
+        
+        // COPIE DES RÈGLES DE CIBLE VERS PERSO
+        TARGETS.perso = TARGETS.cible;
+
+        const btn = document.getElementById('btn-perso');
+        btn.innerText = `PERSO (${lines})`;
+        btn.classList.remove('hidden');
+        
+        closeModal();
+        switchTab('perso');
+    }
 
     function render() {
         if(appState.mode === 'compare') { renderCompare(); return; }
@@ -503,6 +572,8 @@
             tr.innerHTML = h; tb.appendChild(tr);
         });
         renderRules(d);
+
+        if(appState.mode === 'perso') renderPersoCompare();
     }
 
     function renderRules(d) {
@@ -547,16 +618,53 @@
         tb.innerHTML = h;
     }
 
+    function renderPersoCompare() {
+        const sP = calculateGridStats(appState.data.perso);
+        const s1 = calculateGridStats(appState.data.actuel);
+        const s2 = calculateGridStats(appState.data.projet);
+        const sD = calculateGridStats(appState.data.direction);
+        const s3 = calculateGridStats(appState.data.cible);
+        
+        const tb = document.getElementById('compare-perso-body'); tb.innerHTML = '';
+        const row = (l, vP, v1, v2, vD, v3, f=(x)=>x) => {
+            return `<tr><td class="td-left font-bold text-muted text-sm">${l}</td>
+                <td class="font-bold text-blue" style="background:#f0f9ff; border:2px solid var(--blue);">${f(vP)}</td>
+                <td class="font-bold text-muted">${f(v1)}</td>
+                <td class="font-bold text-muted">${f(v2)}</td>
+                <td class="font-bold text-purple">${f(vD)}</td>
+                <td class="font-bold text-muted">${f(v3)}</td></tr>`;
+        };
+        let h = row("Durée Hebdo", sP.moy, s1.moy, s2.moy, sD.moy, s3.moy, fmt);
+        h += row("Vacations / An", sP.vacAn, s1.vacAn, s2.vacAn, sD.vacAn, s3.vacAn);
+        h += row("Total Heures Nuit / An", Math.round(sP.nuitAn*8), Math.round(s1.nuitAn*8), Math.round(s2.nuitAn*8), Math.round(sD.nuitAn*8), Math.round(s3.nuitAn*8), x=>x+'h');
+        h += row("Dimanches Repos", Math.round(52-sP.dimAn), Math.round(52-s1.dimAn), Math.round(52-s2.dimAn), Math.round(52-sD.dimAn), Math.round(52-s3.dimAn));
+        h += row("WE Complets", Math.round(sP.weAn), Math.round(s1.weAn), Math.round(s2.weAn), Math.round(sD.weAn), Math.round(s3.weAn));
+        h += row("Total Majoré (Mois)", sP.majMois, s1.majMois, s2.majMois, sD.majMois, s3.majMois, fmt);
+        tb.innerHTML = h;
+    }
+
     function switchTab(m) {
         appState.mode = m;
-        ['actuel','projet','direction','cible','compare','vierge'].forEach(x => {
+        ['actuel','projet','direction','cible','compare','vierge','perso'].forEach(x => {
             const b = document.getElementById('btn-'+x);
             if(b) { if(x===m) { b.classList.add('active'); b.classList.remove('text-muted'); } else { b.classList.remove('active'); b.classList.add('text-muted'); } }
         });
+        
         const isCmp = m==='compare';
+        // Gère l'affichage global
         ['view-grid','dashboard-stats','dashboard-social','view-rules-container'].forEach(i=>document.getElementById(i).classList.toggle('hidden', isCmp));
         document.getElementById('view-compare').classList.toggle('hidden', !isCmp);
-        if(!isCmp) { document.getElementById('grid-title').innerText = `Grille ${m.toUpperCase()} (${appState.data[m].length} Lignes)`; render(); } else renderCompare();
+        
+        // Gestion spécifique PERSO
+        const isPerso = m === 'perso';
+        document.getElementById('view-compare-perso').classList.toggle('hidden', !isPerso);
+        
+        if(!isCmp) { 
+            document.getElementById('grid-title').innerText = `Grille ${m.toUpperCase()} (${appState.data[m].length} Lignes)`; 
+            render(); 
+        } else {
+            renderCompare();
+        }
     }
 
     switchTab('actuel');
